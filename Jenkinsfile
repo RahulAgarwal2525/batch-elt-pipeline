@@ -1,33 +1,37 @@
 pipeline {
-agent any
+    agent any
 
-// We can set a cron schedule here later (e.g., run every morning at 6 AM)
-
-stages {
-    stage('Verify Environment') {
-        steps {
-            // Since local Jenkins runs on Windows, we use 'bat' instead of 'sh'
-            bat 'echo "Starting pipeline from Local Windows Jenkins!"'
-        }
+    // This block injects environment variables before the stages run
+    environment {
+        // Non-secret variables can be written in plain text
+        DB_USER = 'pipeline_user'
+        DB_NAME = 'analytics_db'
+        DB_HOST = 'localhost'
+        DB_PORT = '5432'
+        
+        // Secrets are securely pulled from the Jenkins vault using their ID
+        OPENWEATHER_API_KEY = credentials('OPENWEATHER_API_KEY')
+        DB_PASSWORD = credentials('DB_PASSWORD')
     }
-    
-    stage('Extract (E)') {
-        steps {
-            // This tells Jenkins to change into your specific project directory
-            dir('E:\\Projects\\batch-elt-pipeline') {
+
+    stages {
+        stage('Verify Environment') {
+            steps {
+                bat 'echo "Starting pipeline pulled straight from GitHub with Jenkins Secrets!"'
+            }
+        }
+        
+        stage('Extract (E)') {
+            steps {
+                // Python will automatically find the credentials injected above!
                 bat 'python scripts/extract.py'
             }
         }
-    }
-    
-    stage('Transform (T)') {
-        steps {
-            dir('E:\\Projects\\batch-elt-pipeline') {
+        
+        stage('Transform (T)') {
+            steps {
                 bat 'python scripts/transform.py'
             }
         }
     }
-}
-
-
 }
