@@ -1,11 +1,13 @@
 pipeline {
     agent any
 
-    // This triggers the pipeline automatically. 
-    // The syntax is (Minute Hour Day Month DayOfWeek)
-    // 'H 8 * * *' means run once every day around 8:00 AM.
     triggers {
-        cron('H 8 * * *')
+        // 1. Batch Processing: Run unconditionally once a week on Sunday around 8:00 AM
+        cron('H 8 * * 0')
+        
+        // 2. CI/CD: Check GitHub for new code once a week on Sunday around 9:00 AM.
+        // If there is a new commit, run the pipeline!
+        pollSCM('H 9 * * 0')
     }
 
     environment {
