@@ -17,8 +17,8 @@ pipeline {
         DB_HOST = 'localhost'
         DB_PORT = '5432'
         
-        OPENWEATHER_API_KEY = credentials('WEATHER_API_KEY')
-        DB_PASSWORD = credentials('POSTGRES_PASSWORD')
+        OPENWEATHER_API_KEY = credentials('OPENWEATHER_API_KEY')
+        DB_PASSWORD = credentials('DB_PASSWORD')
     }
 
     stages {
