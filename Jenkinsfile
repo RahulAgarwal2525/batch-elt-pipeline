@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    // This triggers the pipeline automatically. 
+    // The syntax is (Minute Hour Day Month DayOfWeek)
+    // 'H 8 * * *' means run once every day around 8:00 AM.
+    triggers {
+        cron('H 8 * * *')
+    }
+
     environment {
         // Your exact Python path with double backslashes escaped for Jenkins
         PYTHON_PATH = 'C:\\Users\\MY DELL\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe' 
@@ -10,8 +17,8 @@ pipeline {
         DB_HOST = 'localhost'
         DB_PORT = '5432'
         
-        OPENWEATHER_API_KEY = credentials('OPENWEATHER_API_KEY')
-        DB_PASSWORD = credentials('DB_PASSWORD')
+        OPENWEATHER_API_KEY = credentials('WEATHER_API_KEY')
+        DB_PASSWORD = credentials('POSTGRES_PASSWORD')
     }
 
     stages {
